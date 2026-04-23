@@ -24,11 +24,20 @@ test('parcours creation projet et tache', async ({ page }, testInfo) => {
   // Soumettre le formulaire
   await page.getByRole('button', { name: /se connecter/i }).click();
 
-  // Verifier si une erreur d'auth est remontee
-  const authError = page.locator('[class*="red-400"]');
-  if (await authError.isVisible({ timeout: 4000 })) {
-    const msg = await authError.innerText();
-    throw new Error('Erreur d\'authentification: ' + msg);
+  // Attendre soit la redirection vers le dashboard, soit une erreur visible.
+  await page.waitForFunction(
+    () => window.location.pathname === '/' || Boolean(document.querySelector('.text-red-400')),
+    { timeout: 20000 }
+  );
+
+  // Si on est toujours sur /login, remonter le message exact.
+  if (page.url().endsWith('/login')) {
+    const authError = page.locator('.text-red-400').first();
+    const authErrorText = (await authError.isVisible({ timeout: 1000 }))
+      ? (await authError.innerText()).trim()
+      : 'Aucun message d\'erreur visible';
+    const isLoading = await page.getByRole('button', { name: /patiente/i }).isVisible().catch(() => false);
+    throw new Error(`Login bloque sur /login - erreur: ${authErrorText} - loading: ${isLoading}`);
   }
 
   // Attendre d'etre connecte (navigation vers le dashboard)
