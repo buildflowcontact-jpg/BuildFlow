@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version-file: frontend/.nvmrc
       - name: Install dependencies
         run: npm ci
       - name: Run unit/integration tests
