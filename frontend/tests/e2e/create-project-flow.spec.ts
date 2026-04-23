@@ -60,7 +60,7 @@ test('parcours creation projet et tache', async ({ page }, testInfo) => {
   // Naviguer dans le projet > taches
   await page.getByRole('link', { name: new RegExp(projectName) }).click();
   await expect(page.getByRole('heading', { name: new RegExp(projectName) })).toBeVisible({ timeout: 10000 });
-  await page.getByRole('link', { name: /tâches|taches/i }).click();
+  await page.getByRole('link', { name: /gérer les tâches|gerer les taches/i }).click();
 
   // Ajouter une tache
   await page.getByRole('button', { name: /nouvelle tâche|nouvelle tache/i }).click();
