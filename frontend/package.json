@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:stats": "tsc && vite build --mode production",
+    "bundle:check": "node scripts/check-bundle-size.cjs",
     "test": "jest --config jest.config.cjs --passWithNoTests",
     "test:coverage": "jest --config jest.config.cjs --coverage --passWithNoTests",
     "test:e2e": "playwright test",
