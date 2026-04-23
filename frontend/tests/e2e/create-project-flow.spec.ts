@@ -3,7 +3,11 @@
 const E2E_EMAIL = process.env.E2E_USER_EMAIL;
 const E2E_PASSWORD = process.env.E2E_USER_PASSWORD;
 
-test('parcours creation projet et tache', async ({ page }) => {
+test('parcours creation projet et tache', async ({ page }, testInfo) => {
+  const suffix = `${testInfo.project.name}-${Date.now()}`;
+  const projectName = `Projet E2E ${suffix}`;
+  const taskName = `Tache E2E ${suffix}`;
+
   // Ce test necessite des credentials Supabase valides.
   // Definir E2E_USER_EMAIL et E2E_USER_PASSWORD dans l'environnement.
   if (!E2E_EMAIL || !E2E_PASSWORD) {
@@ -28,25 +32,31 @@ test('parcours creation projet et tache', async ({ page }) => {
   }
 
   // Attendre d'etre connecte (navigation vers le dashboard)
-  await expect(page.getByRole('heading', { name: /projets/i })).toBeVisible({ timeout: 20000 });
+  await expect(page).toHaveURL(/\/$/, { timeout: 20000 });
+  await expect(page.getByRole('heading', { name: /vue d’ensemble de l’activité|vue d'ensemble de l'activite/i })).toBeVisible({ timeout: 20000 });
+
+  // Aller a la liste des projets depuis le dashboard
+  await page.getByRole('link', { name: /voir tous les projets/i }).click();
+  await expect(page.getByRole('heading', { name: /tous vos projets/i })).toBeVisible({ timeout: 10000 });
 
   // Ouvrir la modale de creation de projet
   await page.getByRole('button', { name: /nouveau projet/i }).click();
-  await page.getByPlaceholder(/nom du projet/i).fill('Projet E2E');
-  await page.getByRole('button', { name: /^creer$|^ok$/i }).click();
+  await page.getByPlaceholder(/nom du projet/i).fill(projectName);
+  await page.getByRole('button', { name: /créer le projet|creer le projet|créer|creer|ok/i }).click();
 
   // Verifier que le projet apparait dans la liste
-  await expect(page.getByText('Projet E2E')).toBeVisible({ timeout: 10000 });
+  await expect(page.getByRole('link', { name: new RegExp(projectName) })).toBeVisible({ timeout: 10000 });
 
   // Naviguer dans le projet > taches
-  await page.getByText('Projet E2E').click();
-  await page.getByRole('link', { name: /taches/i }).click();
+  await page.getByRole('link', { name: new RegExp(projectName) }).click();
+  await expect(page.getByRole('heading', { name: new RegExp(projectName) })).toBeVisible({ timeout: 10000 });
+  await page.getByRole('link', { name: /tâches|taches/i }).click();
 
   // Ajouter une tache
-  await page.getByRole('button', { name: /nouvelle tache/i }).click();
-  await page.getByPlaceholder(/titre de la tache/i).fill('Tache E2E');
-  await page.getByRole('button', { name: /^creer$/i }).click();
+  await page.getByRole('button', { name: /nouvelle tâche|nouvelle tache/i }).click();
+  await page.getByPlaceholder(/titre de la tâche|titre de la tache/i).fill(taskName);
+  await page.getByRole('button', { name: /^créer$|^creer$/i }).click();
 
   // Verifier que la tache apparait
-  await expect(page.getByText('Tache E2E')).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText(taskName)).toBeVisible({ timeout: 10000 });
 });
