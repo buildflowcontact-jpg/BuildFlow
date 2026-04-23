@@ -1,5 +1,6 @@
 import { render, waitFor } from '@testing-library/react';
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 jest.mock('../lib/supabase', () => require('../__mocks__/supabase'));
 import App from '../App';
 import { AuthProvider } from '../context/AuthContext';
