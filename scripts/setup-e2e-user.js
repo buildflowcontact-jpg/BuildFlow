@@ -70,20 +70,19 @@ async function createUser(email, password) {
   return (await res.json()).id;
 }
 
-async function updatePassword(userId, password) {
+async function deleteUser(userId) {
   const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${userId}`, {
-    method: 'PUT',
+    method: 'DELETE',
     headers: ADMIN_HEADERS,
-    body: JSON.stringify({ password }),
   });
-  if (!res.ok) throw new Error(`updatePassword HTTP ${res.status}: ${await res.text()}`);
+  if (!res.ok) throw new Error(`deleteUser HTTP ${res.status}: ${await res.text()}`);
 }
 
 async function cleanupE2EData(userId) {
   // Supprime les projets créés par cet utilisateur lors des runs E2E précédents
-  // (nommés "Projet E2E") pour éviter l'accumulation de données en base.
+  // (nommés "Projet E2E*") pour éviter l'accumulation de données en base.
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/projects?name=eq.Projet+E2E&created_by=eq.${userId}`,
+    `${SUPABASE_URL}/rest/v1/projects?name=like.Projet%20E2E%25&created_by=eq.${userId}`,
     {
       method: 'DELETE',
       headers: { ...ADMIN_HEADERS, Prefer: 'return=minimal' },
@@ -103,9 +102,9 @@ async function main() {
 
   let userId;
   if (existing) {
-    console.log('[setup-e2e-user] Compte existant trouvé — réinitialisation du mot de passe.');
-    await updatePassword(existing.id, E2E_PASSWORD);
-    userId = existing.id;
+    console.log('[setup-e2e-user] Compte existant trouvé — suppression puis recréation propre.');
+    await deleteUser(existing.id);
+    userId = await createUser(E2E_EMAIL, E2E_PASSWORD);
   } else {
     console.log('[setup-e2e-user] Compte introuvable — création.');
     userId = await createUser(E2E_EMAIL, E2E_PASSWORD);
