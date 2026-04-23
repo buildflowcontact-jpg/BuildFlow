@@ -49,7 +49,7 @@ test('parcours creation projet et tache', async ({ page }, testInfo) => {
   await expect(page.getByRole('heading', { name: /tous vos projets/i })).toBeVisible({ timeout: 10000 });
 
   // Ouvrir la modale de creation de projet
-  await page.getByRole('button', { name: /nouveau projet/i }).click();
+  await page.getByRole('button', { name: 'Nouveau projet', exact: true }).click();
   await page.getByPlaceholder(/nom du projet/i).fill(projectName);
   await page.getByRole('button', { name: /créer le projet|creer le projet|créer|creer|ok/i }).click();
 
