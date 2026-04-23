@@ -63,6 +63,7 @@ jobs:
       E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
       VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
       VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
     steps:
       - name: Checkout
@@ -90,13 +91,13 @@ jobs:
       # Crée / réinitialise le compte de test E2E dans Supabase.
       # Exécuté uniquement si les secrets sont définis (sinon les tests auth sont skippés).
       - name: Seed E2E user
-        if: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.E2E_USER_EMAIL != '' }}
+        if: ${{ env.SUPABASE_SERVICE_ROLE_KEY != '' && env.E2E_USER_EMAIL != '' && env.E2E_USER_PASSWORD != '' && env.VITE_SUPABASE_URL != '' }}
         run: node ../scripts/setup-e2e-user.js
         env:
-          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
-          E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+          SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ env.SUPABASE_SERVICE_ROLE_KEY }}
+          E2E_USER_EMAIL: ${{ env.E2E_USER_EMAIL }}
+          E2E_USER_PASSWORD: ${{ env.E2E_USER_PASSWORD }}
 
       - name: Start preview server
         run: npx vite preview --port 5173 &
