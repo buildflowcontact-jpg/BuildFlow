@@ -54,15 +54,7 @@ jobs:
           trap cleanup EXIT
 
           npx wait-on --timeout 180000 tcp:5173
-          cat > /tmp/pa11y-ci.json <<'EOF'
-          {
-            "chromeLaunchConfig": {
-              "args": ["--no-sandbox", "--disable-setuid-sandbox"]
-            }
-          }
-          EOF
-
-          npx pa11y http://127.0.0.1:5173 --standard WCAG2AA --reporter cli --config /tmp/pa11y-ci.json
+          npx pa11y http://127.0.0.1:5173 --standard WCAG2AA --reporter cli --config ./pa11y-ci.json
           npx playwright test --reporter=list,html
         shell: bash
         env:
