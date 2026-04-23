@@ -41,16 +41,24 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Start Vite server
-        run: npm run dev &
+        run: |
+          nohup npm run dev > /tmp/vite.log 2>&1 &
+          echo $! > /tmp/vite.pid
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
       - name: Wait for Vite
-        run: npx wait-on http://localhost:5173
+        run: npx wait-on --timeout 120000 http://127.0.0.1:5173
       - name: Run Pa11y accessibility checks
-        run: npx pa11y http://localhost:5173 --standard WCAG2AA --reporter cli
+        run: npx pa11y http://127.0.0.1:5173 --standard WCAG2AA --reporter cli
       - name: Run Playwright E2E tests
         run: npx playwright test --reporter=list,html
+      - name: Cleanup Vite server
+        if: always()
+        run: |
+          if [ -f /tmp/vite.pid ]; then
+            kill $(cat /tmp/vite.pid) || true
+          fi
       - name: Upload Playwright HTML report
         uses: actions/upload-artifact@v7
         with:
