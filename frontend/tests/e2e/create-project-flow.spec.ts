@@ -50,8 +50,9 @@ test('parcours creation projet et tache', async ({ page }, testInfo) => {
 
   // Ouvrir la modale de creation de projet
   await page.getByRole('button', { name: 'Nouveau projet', exact: true }).click();
-  await page.getByPlaceholder(/nom du projet/i).fill(projectName);
-  await page.getByRole('button', { name: /créer le projet|creer le projet|créer|creer|ok/i }).click();
+  await page.getByRole('button', { name: /projet vierge/i }).click();
+  await page.getByPlaceholder(/application mobile buildflow/i).fill(projectName);
+  await page.getByRole('button', { name: /créer le projet|creer le projet/i }).click();
 
   // Verifier que le projet apparait dans la liste
   await expect(page.getByRole('link', { name: new RegExp(projectName) })).toBeVisible({ timeout: 10000 });
