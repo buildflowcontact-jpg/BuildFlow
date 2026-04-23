@@ -58,12 +58,14 @@ jobs:
           path: frontend/playwright-report
 
   test-backup-restore:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: scripts/sql
     steps:
       - uses: actions/checkout@v5
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
       - name: Exécuter le test PowerShell backup/restore
         shell: pwsh
         run: ./test-backup-restore.ps1 -ConnectionString "${{ secrets.DB_CONNECTION_STRING }}" -Environment dev
