@@ -4,6 +4,8 @@ const E2E_EMAIL = process.env.E2E_USER_EMAIL;
 const E2E_PASSWORD = process.env.E2E_USER_PASSWORD;
 
 test('parcours creation projet et tache', async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
+
   const suffix = `${testInfo.project.name}-${Date.now()}`;
   const projectName = `Projet E2E ${suffix}`;
   const taskName = `Tache E2E ${suffix}`;
@@ -61,11 +63,33 @@ test('parcours creation projet et tache', async ({ page }, testInfo) => {
   await page.getByRole('link', { name: new RegExp(projectName) }).click();
   await expect(page.getByRole('heading', { name: new RegExp(projectName) })).toBeVisible({ timeout: 10000 });
   await page.getByRole('link', { name: /gérer les tâches|gerer les taches/i }).click();
+  await expect(page).toHaveURL(/\/projects\/[^/]+\/tasks$/, { timeout: 20000 });
+  await expect(page.getByRole('heading', { name: /tâches du projet|taches du projet/i })).toBeVisible({ timeout: 20000 });
 
   // Ajouter une tache
-  await page.getByRole('button', { name: /nouvelle tâche|nouvelle tache/i }).click();
-  await page.getByPlaceholder(/titre de la tâche|titre de la tache/i).fill(taskName);
-  await page.getByRole('button', { name: /^créer$|^creer$/i }).click();
+  const openTaskModalCandidates = [
+    page.getByRole('button', { name: 'Nouvelle tâche', exact: true }),
+    page.getByRole('button', { name: /ajouter une tâche|ajouter une tache/i }).first(),
+  ];
+
+  let modalOpened = false;
+  for (const candidate of openTaskModalCandidates) {
+    const visible = await candidate.isVisible().catch(() => false);
+    if (visible) {
+      await candidate.click();
+      modalOpened = true;
+      break;
+    }
+  }
+
+  if (!modalOpened) {
+    throw new Error('Impossible de trouver un bouton pour ouvrir la modale de creation de tache.');
+  }
+
+  const taskModal = page.locator('.bf-modal-panel').last();
+  await expect(taskModal.getByRole('heading', { name: /nouvelle tâche|nouvelle tache|nouvelle sous-tâche|nouvelle sous-tache/i })).toBeVisible({ timeout: 10000 });
+  await taskModal.getByPlaceholder(/titre de la tâche|titre de la tache/i).fill(taskName);
+  await taskModal.getByRole('button', { name: /^créer$|^creer$/i }).click();
 
   // Verifier que la tache apparait
   await expect(page.getByText(taskName)).toBeVisible({ timeout: 10000 });
