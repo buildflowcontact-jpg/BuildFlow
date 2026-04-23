@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 defaults:
   run:
     working-directory: frontend
@@ -118,6 +121,7 @@ jobs:
         with:
           name: playwright-report
           path: frontend/playwright-report/
+          if-no-files-found: ignore
           retention-days: 7
 
       - name: Upload test videos (failures only)
@@ -126,4 +130,5 @@ jobs:
         with:
           name: playwright-videos
           path: frontend/test-results/
+          if-no-files-found: ignore
           retention-days: 3

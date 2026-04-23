@@ -22,7 +22,21 @@ if (missing.length) {
   process.exit(1);
 }
 
-const SUPABASE_URL          = process.env.SUPABASE_URL;
+function normalizeSupabaseUrl(rawUrl) {
+  const trimmed = String(rawUrl || '').trim();
+  let parsed;
+
+  try {
+    parsed = new URL(trimmed);
+  } catch {
+    throw new Error('SUPABASE_URL invalide. Attendu: https://<project-ref>.supabase.co');
+  }
+
+  // Garde uniquement l'origine, même si /rest/v1 ou /auth/v1 a été saisi par erreur.
+  return parsed.origin;
+}
+
+const SUPABASE_URL          = normalizeSupabaseUrl(process.env.SUPABASE_URL);
 const SERVICE_ROLE_KEY      = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const E2E_EMAIL             = process.env.E2E_USER_EMAIL;
 const E2E_PASSWORD          = process.env.E2E_USER_PASSWORD;
