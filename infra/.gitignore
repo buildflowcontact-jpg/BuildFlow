@@ -1,0 +1,4 @@
+# Ignore tout sauf les scripts et la structure
+!migrations/
+!sql/
+!backups/

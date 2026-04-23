@@ -1,0 +1,33 @@
+name: Protection données prod avant migration
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  check-backup-before-migration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Vérifie présence du backup avant migration prod
+        id: check-backup
+        run: |
+          if [[ "$ENVIRONMENT" == "prod" ]]; then
+            if [[ -z "$BACKUP_PATH" || ! -f "$BACKUP_PATH" ]]; then
+              echo "::error::Aucune sauvegarde trouvée pour la prod. Migration refusée."
+              exit 1
+            fi
+          fi
+        env:
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+          BACKUP_PATH: ${{ secrets.BACKUP_PATH }}
+
+      - name: Lancer la migration (exemple)
+        if: steps.check-backup.outcome == 'success'
+        run: |
+          echo "Migration autorisée. (Ici, lancer le script PowerShell ou l'étape de déploiement réelle)"

@@ -1,0 +1,76 @@
+name: CI Full App
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate-migration-sql:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: scripts/sql
+    steps:
+      - uses: actions/checkout@v4
+      - name: Valider les scripts SQL de migration
+        shell: pwsh
+        run: ./validate-migration-scripts.ps1 -SqlRoot ../../docs
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run unit/integration tests
+        run: npx jest --config jest.config.cjs --passWithNoTests --coverage
+      - name: Upload Jest coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-coverage
+          path: frontend/coverage
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Start Vite server
+        run: npm run dev &
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      - name: Wait for Vite
+        run: npx wait-on http://localhost:5173
+      - name: Run Pa11y accessibility checks
+        run: npx pa11y http://localhost:5173 --standard WCAG2AA --reporter cli
+      - name: Run Playwright E2E tests
+        run: npx playwright test --reporter=list,html
+      - name: Upload Playwright HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+
+  test-backup-restore:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: scripts/sql
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exécuter le test PowerShell backup/restore
+        shell: pwsh
+        run: ./test-backup-restore.ps1 -ConnectionString "${{ secrets.DB_CONNECTION_STRING }}" -Environment dev
+      - name: Nettoyer les dumps temporaires
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path ../../infra/backups) {
+            Get-ChildItem ../../infra/backups -Filter "*ci-backup-restore-test*.dump" -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+          }

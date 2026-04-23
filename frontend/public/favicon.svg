@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="BuildFlow favicon">
+  <defs>
+    <linearGradient id="bfGradFavicon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#bfGradFavicon)" />
+  <path d="M34 36h32c12 0 20 7 20 18 0 8-4 14-11 17 9 3 14 9 14 18 0 12-9 21-23 21H34V36zm18 14v16h12c5 0 8-3 8-8s-3-8-8-8H52zm0 29v17h14c6 0 10-3 10-8 0-6-4-9-10-9H52z" fill="#ffffff" />
+</svg>

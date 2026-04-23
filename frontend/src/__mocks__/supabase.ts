@@ -1,0 +1,25 @@
+export const supabase = {
+  auth: {
+    getSession: jest.fn().mockResolvedValue({ data: { session: { user: { id: '1', email: 'test@test.com', user_metadata: {} } } } }),
+    onAuthStateChange: jest.fn().mockImplementation(() => ({
+      data: { subscription: { unsubscribe: jest.fn() } },
+    })),
+  },
+  from: jest.fn().mockReturnThis(),
+  select: jest.fn().mockReturnThis(),
+  is: jest.fn().mockReturnThis(),
+  eq: jest.fn().mockReturnThis(),
+  in: jest.fn().mockReturnThis(),
+  not: jest.fn().mockReturnThis(),
+  insert: jest.fn().mockReturnThis(),
+  update: jest.fn().mockReturnThis(),
+  delete: jest.fn().mockReturnThis(),
+  upsert: jest.fn().mockReturnThis(),
+  single: jest.fn().mockResolvedValue({ data: null, error: null }),
+  maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }),
+  order: jest.fn().mockReturnThis(),
+  limit: jest.fn().mockReturnThis(),
+  then: jest.fn().mockImplementation(cb => cb({ data: [] })),
+  channel: jest.fn().mockReturnValue({ on: jest.fn().mockReturnThis(), subscribe: jest.fn() }),
+  removeChannel: jest.fn(),
+};
