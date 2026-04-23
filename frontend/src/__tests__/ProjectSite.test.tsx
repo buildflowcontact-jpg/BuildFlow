@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-jest.mock('../lib/supabase', () => require('../__mocks__/supabase'));
+jest.mock('../lib/supabase', () => jest.requireActual('../__mocks__/supabase'));
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn().mockReturnValue({ id: 'project-test-id' }),
@@ -34,9 +33,13 @@ jest.mock('../lib/siteNotifications', () => ({
 }));
 
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { AuthProvider } from '../context/AuthContext';
+import {
+  loadConstructionPhaseMetrics,
+  loadConstructionSiteData,
+} from '../lib/constructionSite';
 import ProjectSite from '../pages/project/ProjectSite';
 
 function Wrapper({ children }: { children: React.ReactNode }) {
@@ -66,7 +69,6 @@ describe('ProjectSite', () => {
   });
 
   it('appelle loadConstructionSiteData avec le projectId', async () => {
-    const { loadConstructionSiteData } = require('../lib/constructionSite');
     render(<ProjectSite />, { wrapper: Wrapper });
     await waitFor(() => {
       expect(loadConstructionSiteData).toHaveBeenCalledWith('project-test-id');
@@ -74,7 +76,6 @@ describe('ProjectSite', () => {
   });
 
   it('appelle loadConstructionPhaseMetrics avec le projectId', async () => {
-    const { loadConstructionPhaseMetrics } = require('../lib/constructionSite');
     render(<ProjectSite />, { wrapper: Wrapper });
     await waitFor(() => {
       expect(loadConstructionPhaseMetrics).toHaveBeenCalledWith('project-test-id');
