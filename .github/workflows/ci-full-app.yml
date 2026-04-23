@@ -40,25 +40,34 @@ jobs:
           path: frontend/coverage
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Start Vite server
+      - name: Run frontend accessibility and E2E suite
         run: |
+          set -euo pipefail
+
           nohup npm run dev > /tmp/vite.log 2>&1 &
-          echo $! > /tmp/vite.pid
+          VITE_PID=$!
+
+          cleanup() {
+            kill "$VITE_PID" 2>/dev/null || true
+          }
+
+          trap cleanup EXIT
+
+          npx wait-on --timeout 180000 http://127.0.0.1:5173
+          npx pa11y http://127.0.0.1:5173 --standard WCAG2AA --reporter cli
+          npx playwright test --reporter=list,html
+        shell: bash
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-      - name: Wait for Vite
-        run: npx wait-on --timeout 120000 http://127.0.0.1:5173
-      - name: Run Pa11y accessibility checks
-        run: npx pa11y http://127.0.0.1:5173 --standard WCAG2AA --reporter cli
-      - name: Run Playwright E2E tests
-        run: npx playwright test --reporter=list,html
-      - name: Cleanup Vite server
+      - name: Dump Vite log on failure
         if: always()
         run: |
-          if [ -f /tmp/vite.pid ]; then
-            kill $(cat /tmp/vite.pid) || true
+          if [ -f /tmp/vite.log ]; then
+            echo "---- /tmp/vite.log ----"
+            cat /tmp/vite.log
           fi
+        shell: bash
       - name: Upload Playwright HTML report
         uses: actions/upload-artifact@v7
         with:
