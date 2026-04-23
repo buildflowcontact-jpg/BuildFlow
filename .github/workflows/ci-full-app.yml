@@ -59,14 +59,21 @@ jobs:
 
   test-backup-restore:
     runs-on: ubuntu-latest
+    env:
+      HAS_DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING != '' }}
     defaults:
       run:
         working-directory: scripts/sql
     steps:
       - uses: actions/checkout@v5
+      - name: DB_CONNECTION_STRING absent - test ignoré
+        if: env.HAS_DB_CONNECTION_STRING != 'true'
+        run: echo "::notice::DB_CONNECTION_STRING n'est pas configuré. Le test backup/restore est ignoré."
       - name: Install PostgreSQL client
+        if: env.HAS_DB_CONNECTION_STRING == 'true'
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
       - name: Exécuter le test PowerShell backup/restore
+        if: env.HAS_DB_CONNECTION_STRING == 'true'
         shell: pwsh
         run: ./test-backup-restore.ps1 -ConnectionString "${{ secrets.DB_CONNECTION_STRING }}" -Environment dev
       - name: Nettoyer les dumps temporaires
