@@ -1052,11 +1052,21 @@ CREATE INDEX IF NOT EXISTS virtual_members_linked_user_idx ON virtual_members(li
 CREATE INDEX IF NOT EXISTS site_zones_project_idx ON site_zones(project_id, kind, code);
 CREATE INDEX IF NOT EXISTS project_subcontractors_project_idx ON project_subcontractors(project_id, status, trade_label);
 CREATE INDEX IF NOT EXISTS construction_phases_project_idx ON construction_phases(project_id, start_date);
+CREATE INDEX IF NOT EXISTS construction_phases_created_by_idx ON construction_phases(created_by);
+CREATE INDEX IF NOT EXISTS construction_phases_zone_idx ON construction_phases(zone_id);
+CREATE INDEX IF NOT EXISTS construction_phases_subcontractor_idx ON construction_phases(subcontractor_id);
 CREATE INDEX IF NOT EXISTS worker_qualifications_project_idx ON worker_qualifications(project_id, expiry_date);
+CREATE INDEX IF NOT EXISTS worker_qualifications_subcontractor_idx ON worker_qualifications(subcontractor_id);
 CREATE INDEX IF NOT EXISTS safety_checklist_project_idx ON safety_checklist_items(project_id, sort_order);
 CREATE INDEX IF NOT EXISTS supply_orders_project_idx ON supply_orders(project_id, expected_delivery_date);
+CREATE INDEX IF NOT EXISTS supply_orders_zone_idx ON supply_orders(zone_id);
+CREATE INDEX IF NOT EXISTS supply_orders_subcontractor_idx ON supply_orders(subcontractor_id);
 CREATE INDEX IF NOT EXISTS equipment_bookings_project_idx ON equipment_bookings(project_id, booking_start);
+CREATE INDEX IF NOT EXISTS equipment_bookings_zone_idx ON equipment_bookings(zone_id);
+CREATE INDEX IF NOT EXISTS equipment_bookings_subcontractor_idx ON equipment_bookings(subcontractor_id);
 CREATE INDEX IF NOT EXISTS site_journal_entries_project_idx ON site_journal_entries(project_id, entry_date DESC);
+CREATE INDEX IF NOT EXISTS site_journal_entries_zone_idx ON site_journal_entries(zone_id);
+CREATE INDEX IF NOT EXISTS site_journal_entries_subcontractor_idx ON site_journal_entries(subcontractor_id);
 CREATE INDEX IF NOT EXISTS site_incidents_project_idx ON site_incidents(project_id, status, severity, due_date);
 CREATE INDEX IF NOT EXISTS site_incidents_zone_idx ON site_incidents(zone_id);
 CREATE INDEX IF NOT EXISTS site_incidents_subcontractor_idx ON site_incidents(subcontractor_id);
@@ -1086,6 +1096,9 @@ CREATE INDEX IF NOT EXISTS risk_register_status_idx ON risk_register(status);
 CREATE INDEX IF NOT EXISTS risk_register_owner_idx ON risk_register(owner_id);
 CREATE INDEX IF NOT EXISTS document_versions_document_idx ON document_versions(document_id, version_number DESC);
 CREATE INDEX IF NOT EXISTS document_versions_status_idx ON document_versions(status);
+CREATE INDEX IF NOT EXISTS document_versions_created_by_idx ON document_versions(created_by);
+CREATE INDEX IF NOT EXISTS document_versions_reviewed_by_idx ON document_versions(reviewed_by) WHERE reviewed_by IS NOT NULL;
+CREATE INDEX IF NOT EXISTS document_versions_approved_by_idx ON document_versions(approved_by) WHERE approved_by IS NOT NULL;
 CREATE INDEX IF NOT EXISTS sla_rules_project_idx ON sla_rules(project_id);
 CREATE INDEX IF NOT EXISTS sla_rules_condition_idx ON sla_rules(condition);
 CREATE INDEX IF NOT EXISTS sla_violations_rule_idx ON sla_violations(sla_rule_id, detected_at DESC);
@@ -1096,9 +1109,12 @@ CREATE INDEX IF NOT EXISTS milestones_status_idx ON milestones(status);
 CREATE INDEX IF NOT EXISTS task_milestone_mapping_milestone_idx ON task_milestone_mapping(milestone_id);
 CREATE INDEX IF NOT EXISTS automation_rules_project_idx ON automation_rules(project_id);
 CREATE INDEX IF NOT EXISTS automation_rules_trigger_event_idx ON automation_rules(trigger_event);
+CREATE INDEX IF NOT EXISTS automation_rules_created_by_idx ON automation_rules(created_by);
 CREATE INDEX IF NOT EXISTS decision_journal_project_idx ON decision_journal(project_id);
 CREATE INDEX IF NOT EXISTS decision_journal_status_idx ON decision_journal(status);
 CREATE INDEX IF NOT EXISTS decision_journal_owner_idx ON decision_journal(owner_id);
+CREATE INDEX IF NOT EXISTS decision_journal_created_by_idx ON decision_journal(created_by);
+CREATE INDEX IF NOT EXISTS decision_journal_approved_by_idx ON decision_journal(approved_by) WHERE approved_by IS NOT NULL;
 CREATE INDEX IF NOT EXISTS decision_journal_created_date_idx ON decision_journal(created_at DESC);
 
 -- =================================================================================
@@ -2491,7 +2507,11 @@ DROP POLICY IF EXISTS "documents_storage_delete" ON storage.objects;
 
 CREATE POLICY "documents_storage_select" ON storage.objects
 FOR SELECT
-USING (bucket_id = 'documents');
+TO authenticated
+USING (
+  bucket_id = 'documents'
+  AND auth.uid()::text = (storage.foldername(name))[1]
+);
 
 CREATE POLICY "documents_storage_insert" ON storage.objects
 FOR INSERT
