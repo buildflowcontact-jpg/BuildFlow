@@ -29,6 +29,14 @@ beforeAll(() => {
 		if (typeof firstArg === 'string' && firstArg.includes('A suspended resource finished loading inside a test')) {
 			return;
 		}
+		if (typeof firstArg === 'string' && (
+			firstArg.startsWith('persistTask:') ||
+			firstArg.startsWith('loadTasks:') ||
+			firstArg.startsWith('loadProjectTeamMembers members:') ||
+			firstArg.startsWith('createProjectVirtualMember:')
+		)) {
+			return;
+		}
 		originalError(...args);
 	});
 });
