@@ -1122,6 +1122,10 @@ CREATE POLICY "Users can update projects they own or manage" ON projects
 FOR UPDATE USING (
   auth.uid() = created_by
   OR auth_is_project_member(id)
+)
+WITH CHECK (
+  auth.uid() = created_by
+  OR auth_is_project_member(id)
 );
 
 -- ===================== TASKS =====================
@@ -1141,6 +1145,16 @@ FOR INSERT WITH CHECK (auth.uid() = created_by);
 
 CREATE POLICY "Users can update tasks" ON tasks
 FOR UPDATE USING (
+  auth.uid() = created_by OR
+  (
+    project_id IS NOT NULL AND (
+      auth.uid() = assigned_to OR
+      auth_is_project_owner(project_id) OR
+      auth_is_project_member(project_id)
+    )
+  )
+)
+WITH CHECK (
   auth.uid() = created_by OR
   (
     project_id IS NOT NULL AND (
@@ -1207,7 +1221,8 @@ CREATE POLICY "Users can insert their own profile" ON user_profiles
 FOR INSERT WITH CHECK (auth.uid() = id);
 
 CREATE POLICY "Users can update their own profile" ON user_profiles
-FOR UPDATE USING (auth.uid() = id);
+FOR UPDATE USING (auth.uid() = id)
+WITH CHECK (auth.uid() = id);
 
 -- ===================== VIRTUAL_MEMBERS =====================
 CREATE POLICY "Users can view their virtual members" ON virtual_members
@@ -1236,6 +1251,12 @@ FOR INSERT WITH CHECK (
 
 CREATE POLICY "Users can update their virtual members" ON virtual_members
 FOR UPDATE USING (
+  auth.uid() = created_by
+  OR (
+    project_id IS NOT NULL AND auth_is_project_owner(project_id)
+  )
+)
+WITH CHECK (
   auth.uid() = created_by
   OR (
     project_id IS NOT NULL AND auth_is_project_owner(project_id)
@@ -1281,6 +1302,15 @@ FOR UPDATE USING (
       auth_is_project_owner(project_id)
     )
   )
+)
+WITH CHECK (
+  auth.uid() = created_by OR
+  (
+    project_id IS NOT NULL AND (
+      auth_is_project_member(project_id) OR
+      auth_is_project_owner(project_id)
+    )
+  )
 );
 
 CREATE POLICY "Users can delete their expenses" ON expenses
@@ -1317,6 +1347,10 @@ CREATE POLICY "Users can update site zones" ON site_zones
 FOR UPDATE USING (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
+)
+WITH CHECK (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
 );
 
 CREATE POLICY "Users can delete site zones" ON site_zones
@@ -1344,6 +1378,10 @@ CREATE POLICY "Users can update subcontractors" ON project_subcontractors
 FOR UPDATE USING (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
+)
+WITH CHECK (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
 );
 
 CREATE POLICY "Users can delete subcontractors" ON project_subcontractors
@@ -1360,7 +1398,8 @@ CREATE POLICY "Users can create saved filters" ON saved_filters
 FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can update their saved filters" ON saved_filters
-FOR UPDATE USING (auth.uid() = user_id);
+FOR UPDATE USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete their saved filters" ON saved_filters
 FOR DELETE USING (auth.uid() = user_id);
@@ -1382,6 +1421,10 @@ FOR INSERT WITH CHECK (
 
 CREATE POLICY "Users can update construction phases" ON construction_phases
 FOR UPDATE USING (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
+)
+WITH CHECK (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
 );
@@ -1432,6 +1475,10 @@ CREATE POLICY "Users can update safety checklist items" ON safety_checklist_item
 FOR UPDATE USING (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
+)
+WITH CHECK (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
 );
 
 CREATE POLICY "Users can delete safety checklist items" ON safety_checklist_items
@@ -1457,6 +1504,10 @@ FOR INSERT WITH CHECK (
 
 CREATE POLICY "Users can update supply orders" ON supply_orders
 FOR UPDATE USING (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
+)
+WITH CHECK (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
 );
@@ -1486,6 +1537,10 @@ CREATE POLICY "Users can update equipment bookings" ON equipment_bookings
 FOR UPDATE USING (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
+)
+WITH CHECK (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
 );
 
 CREATE POLICY "Users can delete equipment bookings" ON equipment_bookings
@@ -1511,6 +1566,10 @@ FOR INSERT WITH CHECK (
 
 CREATE POLICY "Users can update site journal entries" ON site_journal_entries
 FOR UPDATE USING (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
+)
+WITH CHECK (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
 );
@@ -1540,6 +1599,10 @@ CREATE POLICY "Users can update site incidents" ON site_incidents
 FOR UPDATE USING (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
+)
+WITH CHECK (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
 );
 
 CREATE POLICY "Users can delete site incidents" ON site_incidents
@@ -1564,6 +1627,9 @@ FOR INSERT WITH CHECK (
 CREATE POLICY "Users can update member roles they manage" ON project_members
 FOR UPDATE USING (
   auth.uid() != user_id AND auth_is_project_owner(project_id)
+)
+WITH CHECK (
+  auth.uid() != user_id AND auth_is_project_owner(project_id)
 );
 
 CREATE POLICY "Users can remove members they manage" ON project_members
@@ -1579,7 +1645,8 @@ CREATE POLICY "Authenticated users can create notifications" ON notifications
 FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 
 CREATE POLICY "Users can update their notifications" ON notifications
-FOR UPDATE USING (auth.uid() = user_id);
+FOR UPDATE USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete their notifications" ON notifications
 FOR DELETE USING (auth.uid() = user_id);
@@ -1658,6 +1725,10 @@ CREATE POLICY "Resource owners can modify permissions" ON resource_permissions
 FOR UPDATE USING (
   auth.uid() = granted_by OR
   (resource_type = 'project' AND auth_is_project_owner(resource_id))
+)
+WITH CHECK (
+  auth.uid() = granted_by OR
+  (resource_type = 'project' AND auth_is_project_owner(resource_id))
 );
 
 CREATE POLICY "Resource owners can revoke permissions" ON resource_permissions
@@ -1683,7 +1754,8 @@ CREATE POLICY "Users can create comments" ON comments
 FOR INSERT WITH CHECK (auth.uid() = author_id);
 
 CREATE POLICY "Users can update their comments" ON comments
-FOR UPDATE USING (auth.uid() = author_id);
+FOR UPDATE USING (auth.uid() = author_id)
+WITH CHECK (auth.uid() = author_id);
 
 CREATE POLICY "Users can delete their comments" ON comments
 FOR DELETE USING (auth.uid() = author_id);
@@ -1729,6 +1801,14 @@ FOR UPDATE USING (
       auth_is_project_owner(project_id)
     )
   )
+)
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM tasks WHERE id = task_estimations.task_id AND (
+      auth.uid() = created_by OR
+      auth_is_project_owner(project_id)
+    )
+  )
 );
 
 -- ===================== TIME_ENTRIES =====================
@@ -1747,7 +1827,8 @@ CREATE POLICY "Users can log their time" ON time_entries
 FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can modify their time entries" ON time_entries
-FOR UPDATE USING (auth.uid() = user_id);
+FOR UPDATE USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete their time entries" ON time_entries
 FOR DELETE USING (auth.uid() = user_id);
@@ -1793,7 +1874,8 @@ FOR INSERT WITH CHECK (
 );
 
 CREATE POLICY "Template creators can update" ON task_templates
-FOR UPDATE USING (auth.uid() = created_by);
+FOR UPDATE USING (auth.uid() = created_by)
+WITH CHECK (auth.uid() = created_by);
 
 CREATE POLICY "Template creators can delete" ON task_templates
 FOR DELETE USING (auth.uid() = created_by);
@@ -1884,7 +1966,8 @@ FOR INSERT WITH CHECK (
 );
 
 CREATE POLICY "Project owners can manage baselines" ON project_baselines
-FOR UPDATE USING (auth_is_project_owner(project_id));
+FOR UPDATE USING (auth_is_project_owner(project_id))
+WITH CHECK (auth_is_project_owner(project_id));
 
 -- ===================== TEAM_CAPACITY =====================
 CREATE POLICY "Users can view team capacity" ON team_capacity
@@ -1899,6 +1982,10 @@ FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can update capacity" ON team_capacity
 FOR UPDATE USING (
+  auth.uid() = user_id OR
+  auth_is_project_owner(project_id)
+)
+WITH CHECK (
   auth.uid() = user_id OR
   auth_is_project_owner(project_id)
 );
@@ -1920,6 +2007,11 @@ FOR INSERT WITH CHECK (
 
 CREATE POLICY "Risk owners can update" ON risk_register
 FOR UPDATE USING (
+  auth.uid() = owner_id OR
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
+)
+WITH CHECK (
   auth.uid() = owner_id OR
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
@@ -1945,6 +2037,10 @@ CREATE POLICY "Reviewers can update versions" ON document_versions
 FOR UPDATE USING (
   auth.uid() = created_by OR
   auth.uid() = reviewed_by
+)
+WITH CHECK (
+  auth.uid() = created_by OR
+  auth.uid() = reviewed_by
 );
 
 -- ===================== SLA_RULES =====================
@@ -1958,7 +2054,8 @@ CREATE POLICY "Project owners can manage SLA rules" ON sla_rules
 FOR INSERT WITH CHECK (auth_is_project_owner(project_id));
 
 CREATE POLICY "Project owners can update rules" ON sla_rules
-FOR UPDATE USING (auth_is_project_owner(project_id));
+FOR UPDATE USING (auth_is_project_owner(project_id))
+WITH CHECK (auth_is_project_owner(project_id));
 
 -- ===================== SLA_VIOLATIONS =====================
 CREATE POLICY "Users can view SLA violations" ON sla_violations
@@ -1982,7 +2079,8 @@ CREATE POLICY "Users can create dashboards" ON portfolio_dashboards
 FOR INSERT WITH CHECK (auth.uid() = created_by);
 
 CREATE POLICY "Creators can manage dashboards" ON portfolio_dashboards
-FOR UPDATE USING (auth.uid() = created_by);
+FOR UPDATE USING (auth.uid() = created_by)
+WITH CHECK (auth.uid() = created_by);
 
 CREATE POLICY "Creators can delete dashboards" ON portfolio_dashboards
 FOR DELETE USING (auth.uid() = created_by);
@@ -2004,6 +2102,10 @@ CREATE POLICY "Owners can manage milestones" ON milestones
 FOR UPDATE USING (
   auth.uid() = owner_id OR
   auth_is_project_owner(project_id)
+)
+WITH CHECK (
+  auth.uid() = owner_id OR
+  auth_is_project_owner(project_id)
 );
 
 -- ===================== TASK_MILESTONE_MAPPING =====================
@@ -2021,6 +2123,10 @@ FOR INSERT WITH CHECK (auth_is_project_owner(project_id));
 
 CREATE POLICY "Creators can update rules" ON automation_rules
 FOR UPDATE USING (
+  auth.uid() = created_by OR
+  auth_is_project_owner(project_id)
+)
+WITH CHECK (
   auth.uid() = created_by OR
   auth_is_project_owner(project_id)
 );
@@ -2042,6 +2148,10 @@ FOR INSERT WITH CHECK (
 
 CREATE POLICY "Owners can approve decisions" ON decision_journal
 FOR UPDATE USING (
+  auth.uid() = owner_id OR
+  auth_is_project_owner(project_id)
+)
+WITH CHECK (
   auth.uid() = owner_id OR
   auth_is_project_owner(project_id)
 );
@@ -2088,6 +2198,14 @@ FOR DELETE USING (
 -- ── 3. recurrent_tasks : UPDATE manquant ────────────────────────────────────
 CREATE POLICY "Task owners can update recurrence" ON recurrent_tasks
 FOR UPDATE USING (
+  EXISTS (
+    SELECT 1 FROM tasks WHERE id = recurrent_tasks.template_task_id AND (
+      auth.uid() = created_by OR
+      auth_is_project_owner(project_id)
+    )
+  )
+)
+WITH CHECK (
   EXISTS (
     SELECT 1 FROM tasks WHERE id = recurrent_tasks.template_task_id AND (
       auth.uid() = created_by OR
@@ -2163,6 +2281,14 @@ FOR UPDATE USING (
       auth_is_project_owner(project_id)
     )
   )
+)
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM sla_rules WHERE id = sla_violations.sla_rule_id AND (
+      auth_is_project_member(project_id) OR
+      auth_is_project_owner(project_id)
+    )
+  )
 );
 
 -- ── 9. subtasks : policies trop restrictives ────────────────────────────────
@@ -2196,6 +2322,15 @@ FOR INSERT WITH CHECK (
 
 CREATE POLICY "Task creators can update subtasks" ON subtasks
 FOR UPDATE USING (
+  EXISTS (
+    SELECT 1 FROM tasks t WHERE t.id = subtasks.task_id AND (
+      auth.uid() = t.created_by OR
+      auth_is_project_member(t.project_id) OR
+      auth_is_project_owner(t.project_id)
+    )
+  )
+)
+WITH CHECK (
   EXISTS (
     SELECT 1 FROM tasks t WHERE t.id = subtasks.task_id AND (
       auth.uid() = t.created_by OR
