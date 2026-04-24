@@ -108,9 +108,9 @@ export default function ProjectCalendar() {
       <div className="bf-panel overflow-hidden">
         {/* Navigation */}
         <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-          <button onClick={prev} className="rounded-xl p-2 text-slate-500 hover:bg-slate-100"><ChevronLeft className="h-4 w-4" /></button>
+          <button onClick={prev} className="bf-button-secondary"><ChevronLeft className="h-4 w-4" /></button>
           <h2 className="text-base font-semibold text-slate-900">{FR_MONTHS[month]} {year}</h2>
-          <button onClick={next} className="rounded-xl p-2 text-slate-500 hover:bg-slate-100"><ChevronRight className="h-4 w-4" /></button>
+          <button onClick={next} className="bf-button-secondary"><ChevronRight className="h-4 w-4" /></button>
         </div>
 
         {/* Jours de semaine */}

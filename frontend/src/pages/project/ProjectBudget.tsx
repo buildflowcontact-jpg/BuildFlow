@@ -206,7 +206,7 @@ function HourlyVendorModal({
       <div className="w-full max-w-2xl max-h-[90vh] bf-modal-panel overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-slate-900">{initial ? 'Modifier prestataire' : 'Nouveau prestataire horaire'}</h2>
-          <button onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} className="bf-button-secondary"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
@@ -237,8 +237,8 @@ function HourlyVendorModal({
             </div>
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">Annuler</button>
-            <button type="submit" className="flex-1 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800">Enregistrer</button>
+            <button type="button" onClick={onClose} className="bf-button-secondary">Annuler</button>
+            <button type="submit" className="bf-button">Enregistrer</button>
           </div>
         </form>
       </div>

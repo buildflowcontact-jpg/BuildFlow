@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
-} from 'recharts'
+import { Suspense, lazy } from 'react';
+const LazyPortfolioChartFull = lazy(() => import('./PortfolioChartFull'));
 import {
   BarChart3, TrendingUp, CheckCircle2, AlertTriangle, DollarSign,
   FolderOpen, Calendar, ArrowRight, Filter, Search, ArrowUpDown,
@@ -318,19 +317,9 @@ export default function Portfolio() {
               {chartData.length === 0 ? (
                 <p className="text-sm text-gray-400 text-center py-8">Aucun projet</p>
               ) : (
-                <ResponsiveContainer width="100%" height={220}>
-                  <BarChart data={chartData} margin={{ top: 4, right: 4, left: -24, bottom: 40 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" interval={0} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} unit="%" />
-                    <Tooltip formatter={(value) => [`${Number(value ?? 0)}%`, 'Avancement']} />
-                    <Bar dataKey="completion" radius={[4, 4, 0, 0]}>
-                      {chartData.map((entry, i) => (
-                        <Cell key={i} fill={CHART_COLORS[entry.status] ?? '#6366f1'} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                <Suspense fallback={<div>Chargement du graphique…</div>}>
+                  <LazyPortfolioChartFull chartData={chartData} chartColors={CHART_COLORS} />
+                </Suspense>
               )}
               {/* Legend */}
               <div className="flex flex-wrap gap-3 mt-2">

@@ -1,6 +1,4 @@
-// Export utilities for PDF and Excel
-
-import { jsPDF } from 'jspdf'
+// Export utilities for PDF et Excel (jsPDF lazy loaded)
 
 export interface ExportOptions {
   format: 'pdf' | 'excel'
@@ -11,8 +9,21 @@ export interface ExportOptions {
 }
 
 // Export tasks to CSV (Excel compatible)
+export interface ExportTask {
+  id: string;
+  title: string;
+  description?: string;
+  status: string;
+  priority: string;
+  assigned_to?: string;
+  start_date?: string;
+  end_date?: string;
+  due_date?: string;
+  created_at: string;
+}
+
 export function exportTasksToCSV(
-  tasks: any[],
+  tasks: ExportTask[],
   filename: string = 'tasks.csv'
 ): void {
   const headers = [
@@ -48,14 +59,25 @@ export function exportTasksToCSV(
 }
 
 // Export tasks to JSON
-export function exportTasksToJSON(tasks: any[], filename: string = 'tasks.json'): void {
+export function exportTasksToJSON(tasks: ExportTask[], filename: string = 'tasks.json'): void {
   const json = JSON.stringify(tasks, null, 2)
   downloadFile(json, filename, 'application/json')
 }
 
 // Export projects to CSV
+export interface ExportProject {
+  id: string;
+  name: string;
+  description?: string;
+  status: string;
+  start_date?: string;
+  end_date?: string;
+  budget?: number;
+  created_at: string;
+}
+
 export function exportProjectsToCSV(
-  projects: any[],
+  projects: ExportProject[],
   filename: string = 'projects.csv'
 ): void {
   const headers = ['ID', 'Nom', 'Description', 'Statut', 'Date de début', 'Date de fin', 'Budget', 'Créé le']
@@ -80,8 +102,16 @@ export function exportProjectsToCSV(
 }
 
 // Export expenses report
+export interface ExportExpense {
+  date: string;
+  category: string;
+  amount: number;
+  status: string;
+  description?: string;
+}
+
 export function exportExpensesReport(
-  expenses: any[],
+  expenses: ExportExpense[],
   filename: string = 'expenses-report.csv'
 ): void {
   const headers = ['Date', 'Catégorie', 'Montant', 'Statut', 'Description']
@@ -98,8 +128,16 @@ export function exportExpensesReport(
 }
 
 // Export time log
+export interface ExportTimeEntry {
+  date: string;
+  task_id: string;
+  user_id: string;
+  hours: number;
+  notes?: string;
+}
+
 export function exportTimeLogToCSV(
-  timeEntries: any[],
+  timeEntries: ExportTimeEntry[],
   filename: string = 'time-log.csv'
 ): void {
   const headers = ['Date', 'Tâche', 'Utilisateur', 'Heures', 'Notes']
@@ -122,7 +160,7 @@ export function exportTimeLogToCSV(
 }
 
 // Generate simple PDF report (uses HTML)
-export function generateTasksPDF(tasks: any[], projectName: string = 'Project Report'): void {
+export function generateTasksPDF(tasks: ExportTask[], projectName: string = 'Project Report'): void {
   const html = `
     <!DOCTYPE html>
     <html>
@@ -198,8 +236,13 @@ export function generateTasksPDF(tasks: any[], projectName: string = 'Project Re
   URL.revokeObjectURL(url)
 }
 
-export function exportProjectsToPDFReport(projects: any[], filenamePrefix: string = 'buildflow-rapport'): void {
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' })
+export interface ExportProjectWithTasks extends ExportProject {
+  tasks?: ExportTask[];
+}
+
+export async function exportProjectsToPDFReport(projects: ExportProjectWithTasks[], filenamePrefix: string = 'buildflow-rapport'): Promise<void> {
+  const { jsPDF } = await import('jspdf');
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const marginX = 14
   const pageWidth = 210
   const usableWidth = pageWidth - marginX * 2
@@ -266,9 +309,9 @@ export function exportProjectsToPDFReport(projects: any[], filenamePrefix: strin
   doc.text('Détails par projet', marginX, y)
   y += 7
 
-  projects.forEach((project: any, index: number) => {
+  projects.forEach((project, index: number) => {
     const tasks = project.tasks ?? []
-    const done = tasks.filter((task: any) => task.status === 'done' || task.status === 'completed').length
+    const done = tasks.filter((task) => task.status === 'done' || task.status === 'completed').length
     const rate = tasks.length === 0 ? 0 : Math.round((done / tasks.length) * 100)
 
     ensureRoom(16)
@@ -284,8 +327,8 @@ export function exportProjectsToPDFReport(projects: any[], filenamePrefix: strin
 
     if (tasks.length > 0) {
       writeWrapped('Top tâches:', 2, 10)
-      tasks.slice(0, 6).forEach((task: any) => {
-        const due = task.dueDate || task.due_date || '-'
+      tasks.slice(0, 6).forEach((task) => {
+        const due = task.due_date || task.end_date || '-'
         const status = formatStatus(task.status || '')
         writeWrapped(`- ${task.title || 'Sans titre'} (${status}, échéance: ${due})`, 6, 9)
       })

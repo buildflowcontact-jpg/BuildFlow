@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect, useRef, useMemo } from 'react'
+import { useToast } from '../components/ToastContext'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { Plus, ChevronRight, ChevronDown, X, Check, Trash2, Flag, User, Lock, Link2, Network, Pencil, List } from 'lucide-react'
 import {
@@ -638,7 +639,7 @@ function DependencyPicker({
               "{sourceTask?.title}" sera bloqué jusqu'à la fin de la tâche sélectionnée.
             </p>
           </div>
-          <button type="button" onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 transition">
+          <button type="button" onClick={onClose} className="bf-button-secondary">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -675,6 +676,7 @@ function DependencyPicker({
 }
 
 export default function Tasks() {
+  const { showToast } = useToast();
   const { user, loading: authLoading } = useAuth()
   const [tasks, setTasks] = useState<LocalTask[]>([])
   const [members, setMembers] = useState<TeamMember[]>([])
@@ -758,10 +760,10 @@ export default function Tasks() {
   }
 
   const addTask = () => {
-    if (!form.title.trim() || !user) return
+    if (!form.title.trim() || !user) return;
     if (form.startDate && form.dueDate && form.startDate > form.dueDate) {
-      setPageNotice('La date de début doit être antérieure à la date de fin')
-      return
+      showToast('La date de début doit être antérieure à la date de fin', 'error');
+      return;
     }
     const task: LocalTask = {
       id: generateId(),
@@ -775,12 +777,12 @@ export default function Tasks() {
       subtasks: [],
       parent_id: form.parent_id ?? null,
       dependsOn: [],
-    }
-    persistTasks([...tasks, task])
-    persistTask(task, user.id)
-    setPageNotice('')
-    setForm({ title: '', description: '', status: 'todo', priority: 'medium', assigneeIds: [], startDate: '', dueDate: '', parent_id: null })
-    setModal(null)
+    };
+    persistTasks([...tasks, task]);
+    persistTask(task, user.id);
+    setPageNotice('');
+    setForm({ title: '', description: '', status: 'todo', priority: 'medium', assigneeIds: [], startDate: '', dueDate: '', parent_id: null });
+    setModal(null);
   }
 
   if (loading) return (

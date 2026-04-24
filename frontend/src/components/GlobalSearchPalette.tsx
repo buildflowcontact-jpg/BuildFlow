@@ -121,7 +121,7 @@ export function GlobalSearchPalette({ onClose }: Props) {
             className="flex-1 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none bg-transparent"
           />
           {query && (
-            <button type="button" aria-label="Effacer la recherche" onClick={() => setQuery('')} className="text-slate-400 hover:text-slate-600">
+            <button type="button" aria-label="Effacer la recherche" onClick={() => setQuery('')} className="bf-button-secondary">
               <X className="h-4 w-4" />
             </button>
           )}

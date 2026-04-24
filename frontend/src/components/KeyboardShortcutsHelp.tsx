@@ -66,7 +66,7 @@ export function KeyboardShortcutsHelp({ onClose }: KeyboardShortcutsHelpProps) {
           <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
             <Keyboard className="w-5 h-5" /> Raccourcis clavier
           </h2>
-          <button type="button" aria-label="Fermer" onClick={() => setShowModal(false)} className="p-1 hover:bg-gray-100 rounded transition">
+          <button type="button" aria-label="Fermer" onClick={() => setShowModal(false)} className="bf-button-secondary">
             <X className="w-5 h-5" />
           </button>
         </div>

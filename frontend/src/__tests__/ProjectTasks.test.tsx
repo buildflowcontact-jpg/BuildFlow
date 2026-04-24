@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 jest.mock('../lib/supabase', () => require('../__mocks__/supabase'));
 jest.mock('react-router-dom', () => ({

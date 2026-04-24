@@ -44,7 +44,7 @@ function AddMemberModal({ onClose, onAdded }: { onClose: () => void; onAdded: (m
       <div className="w-full max-w-2xl max-h-[90vh] bf-modal-panel overflow-y-auto rounded-3xl bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
           <h2 className="text-lg font-semibold text-slate-900">Ajouter un membre</h2>
-          <button onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100"><X className="h-5 w-5" /></button>
+          <button onClick={onClose} className="bf-button-secondary"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={submit} className="space-y-4 p-6">
           <div className="grid grid-cols-2 gap-4">
@@ -72,8 +72,8 @@ function AddMemberModal({ onClose, onAdded }: { onClose: () => void; onAdded: (m
           </div>
           {error && <p className="rounded-xl bg-red-50 px-3 py-2 text-xs text-red-600">{error}</p>}
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">Annuler</button>
-            <button type="submit" disabled={saving} className="flex-1 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50">
+            <button type="button" onClick={onClose} className="bf-button-secondary">Annuler</button>
+            <button type="submit" disabled={saving} className="bf-button">
               {saving ? 'Ajout...' : 'Ajouter'}
             </button>
           </div>

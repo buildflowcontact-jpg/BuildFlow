@@ -748,7 +748,7 @@ function AddTaskModal({
               </p>
             )}
           </div>
-          <button onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 transition">
+          <button onClick={onClose} className="bf-button-secondary">
             <X className="h-5 w-5" />
           </button>
         </div>

@@ -111,7 +111,7 @@ function ExpenseModal({ onClose, onSave, initial, parentId, allExpenses }: Expen
           <h2 className="text-xl font-semibold text-slate-900">
             {initial ? 'Modifier la ligne' : 'Nouvelle ligne budgétaire'}
           </h2>
-          <button type="button" onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition">
+          <button type="button" onClick={onClose} className="bf-button-secondary" title="Fermer la fenêtre budget" aria-label="Fermer la fenêtre budget">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -182,10 +182,10 @@ function ExpenseModal({ onClose, onSave, initial, parentId, allExpenses }: Expen
             />
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+            <button type="button" onClick={onClose} className="bf-button-secondary">
               Annuler
             </button>
-            <button type="submit" className="flex-1 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 transition">
+            <button type="submit" className="bf-button" title="Enregistrer les modifications du budget" aria-label="Enregistrer les modifications du budget">
               Enregistrer
             </button>
           </div>
@@ -211,7 +211,7 @@ function BudgetEditModal({ current, onClose, onSave }: { current: number; onClos
       <div className="w-full max-w-2xl max-h-[90vh] bf-modal-panel overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-slate-900">Budget total</h2>
-          <button type="button" onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 transition"><X className="h-5 w-5" /></button>
+          <button type="button" onClick={onClose} className="bf-button-secondary"><X className="h-5 w-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
@@ -219,8 +219,8 @@ function BudgetEditModal({ current, onClose, onSave }: { current: number; onClos
             <input type="number" min="0" step="1" value={value} onChange={e => setValue(e.target.value)} required autoFocus className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none" />
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">Annuler</button>
-            <button type="submit" className="flex-1 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 transition">Enregistrer</button>
+            <button type="button" onClick={onClose} className="bf-button-secondary" title="Annuler et fermer la fenêtre budget" aria-label="Annuler et fermer la fenêtre budget">Annuler</button>
+            <button type="submit" className="bf-button" title="Enregistrer les modifications du budget" aria-label="Enregistrer les modifications du budget">Enregistrer</button>
           </div>
         </form>
       </div>

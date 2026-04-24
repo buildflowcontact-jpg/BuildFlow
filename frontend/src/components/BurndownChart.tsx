@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { TrendingDown, AlertCircle, CheckCircle, Clock } from 'lucide-react'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
+import { Suspense, lazy } from 'react'
 
 interface BurndownChartProps {
   tasks: any[]
@@ -89,6 +89,12 @@ export function BurndownChart({ tasks, startDate, endDate, compact = false }: Bu
 }
 
 function CompactBurndown({ stats }: { stats: any }) {
+  const LazyFullBurndown = lazy(() => import('./BurndownChartFull'));
+  return (
+    <Suspense fallback={<div>Chargement du graphique…</div>}>
+      <LazyFullBurndown stats={stats} tasks={tasks} burndownData={burndownData} />
+    </Suspense>
+  );
   return (
     <div className="grid grid-cols-2 gap-2">
       <div className="bg-green-50 rounded-lg p-3 border border-green-200">

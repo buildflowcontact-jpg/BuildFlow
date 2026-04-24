@@ -19,9 +19,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "types": ["jest", "node", "react"]
   },
-  "include": ["src"],
-  "exclude": ["src/__tests__", "src/__mocks__"],
+  "include": ["src", "src/__tests__", "src/__mocks__"],
+  "exclude": [],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

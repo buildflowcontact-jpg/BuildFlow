@@ -262,8 +262,8 @@ export default function ProjectObjectives() {
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={() => setShowAdd(false)} className="rounded-2xl border border-slate-200 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">Annuler</button>
-              <button type="submit" disabled={saving} className="rounded-2xl bg-slate-950 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50 transition">
+              <button type="button" onClick={() => setShowAdd(false)} className="bf-button-secondary">Annuler</button>
+              <button type="submit" disabled={saving} className="bf-button">
                 {saving ? 'Création...' : 'Créer'}
               </button>
             </div>

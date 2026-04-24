@@ -27,18 +27,20 @@ export default function Login() {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({ email, password })
+        const { error, data } = await supabase.auth.signUp({ email, password })
         if (error) throw error
         setSignUpSuccess(true)
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
+        const { error, data } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
         navigate('/')
       }
     } catch (error: unknown) {
+      console.error('[Login] Erreur auth', error)
       setAuthError(error instanceof Error ? error.message : 'Une erreur est survenue')
     } finally {
       setLoading(false)
+      console.log('[Login] Fin handleSubmit')
     }
   }
 
@@ -130,7 +132,7 @@ export default function Login() {
             </form>
 
             <div className="mt-6 flex items-center justify-between text-sm text-slate-400">
-              <button type="button" onClick={() => { setIsSignUp(!isSignUp); setAuthError(''); setSignUpSuccess(false) }} className="font-medium text-slate-100 hover:text-white">
+              <button type="button" onClick={() => { setIsSignUp(!isSignUp); setAuthError(''); setSignUpSuccess(false) }} className="bf-button">
                 {isSignUp ? 'Déjà un compte ? Connectez-vous' : 'Pas encore de compte ? Inscrivez-vous'}
               </button>
             </div>

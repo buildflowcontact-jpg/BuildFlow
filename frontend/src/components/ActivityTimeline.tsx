@@ -58,6 +58,8 @@ export const ActivityTimeline = memo(function ActivityTimeline({
         <button
           onClick={() => setExpanded(!expanded)}
           className="flex items-center justify-between w-full p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+          title={expanded ? "Réduire l'historique des activités" : "Déplier l'historique des activités"}
+          aria-label={expanded ? "Réduire l'historique des activités" : "Déplier l'historique des activités"}
         >
           <div className="flex items-center gap-2">
             <History className="w-5 h-5 text-gray-600" />
@@ -123,6 +125,8 @@ const ActivityLogEntry = memo(function ActivityLogEntry({ log, isLast }: Activit
           <button
             onClick={() => setShowDetails(!showDetails)}
             className="text-xs text-blue-600 hover:text-blue-800 mt-2 font-medium transition"
+            title={showDetails ? "Masquer les détails de l'activité" : "Afficher les détails de l'activité"}
+            aria-label={showDetails ? "Masquer les détails de l'activité" : "Afficher les détails de l'activité"}
           >
             {showDetails ? 'Masquer détails' : 'Afficher détails'}
           </button>

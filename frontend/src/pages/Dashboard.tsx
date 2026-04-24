@@ -211,6 +211,8 @@ export default function Dashboard() {
               aria-expanded={showCustomize}
               aria-controls="dashboard-customize-panel"
               className="bf-button-secondary justify-center"
+              title="Personnaliser le tableau de bord"
+              aria-label="Personnaliser le tableau de bord"
             >
               <Settings2 className="h-4 w-4" />
               Personnaliser
@@ -228,10 +230,10 @@ export default function Dashboard() {
               <p className="text-xs font-semibold uppercase tracking-wide text-indigo-600">Widgets affichés</p>
               <div className="flex items-center gap-3">
                 {savingWidgets && <span className="text-[10px] font-semibold text-indigo-500">Enregistrement...</span>}
-                <button type="button" onClick={resetWidgets} className="text-xs font-semibold text-indigo-600 hover:text-indigo-700">
+                <button type="button" onClick={resetWidgets} className="bf-button-secondary" title="Réinitialiser la disposition du tableau de bord" aria-label="Réinitialiser la disposition du tableau de bord">
                   Réinitialiser
                 </button>
-                <button type="button" onClick={() => setShowCustomize(false)} className="rounded-lg p-1 text-slate-400 hover:bg-indigo-100 hover:text-slate-700">
+                <button type="button" onClick={() => setShowCustomize(false)} className="bf-button-secondary">
                   <X className="h-4 w-4" />
                 </button>
               </div>

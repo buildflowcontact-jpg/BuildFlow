@@ -74,6 +74,8 @@ export default function BaselineComparison({ projectId }: { projectId: string })
           onClick={handleCompare}
           disabled={loading || !selectedBaseline}
           className="w-full py-2 bg-amber-600 text-white rounded hover:bg-amber-700 disabled:bg-gray-400 text-sm font-medium"
+          title="Comparer la baseline sélectionnée avec l'actuelle"
+          aria-label="Comparer la baseline sélectionnée avec l'actuelle"
         >
           {loading ? 'Chargement...' : 'Comparer'}
         </button>
@@ -112,6 +114,8 @@ export default function BaselineComparison({ projectId }: { projectId: string })
       <button
         onClick={() => handleCompare()}
         className="w-full mt-3 py-2 border border-blue-300 text-blue-600 rounded hover:bg-blue-50 text-sm font-medium flex items-center justify-center gap-2"
+        title="Créer une nouvelle baseline à partir de l'état actuel"
+        aria-label="Créer une nouvelle baseline à partir de l'état actuel"
       >
         <Download size={16} /> Créer nouvelle baseline
       </button>

@@ -95,7 +95,7 @@ function EmptyState({ text }: { text: string }) {
 
 function DangerButton({ onClick }: { onClick: () => void }) {
   return (
-    <button onClick={onClick} className="rounded-lg border border-red-200 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50">
+    <button onClick={onClick} className="bf-button-secondary">
       Supprimer
     </button>
   )

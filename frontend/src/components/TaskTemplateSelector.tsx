@@ -99,7 +99,7 @@ export function TaskTemplateSelector({ projectId, onSelect, showCreate = true, o
           <Copy className="w-5 h-5" /> Modèles de tâches
         </h3>
         {onClose && (
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
+          <button onClick={onClose} className="bf-button-secondary">
             <X className="w-5 h-5" />
           </button>
         )}

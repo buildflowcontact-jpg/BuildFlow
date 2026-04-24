@@ -45,7 +45,7 @@ export function NotificationPreferencesModal({ userId, onClose }: Props) {
             <Bell className="h-5 w-5 text-indigo-500" />
             <h2 className="text-base font-semibold text-slate-900">Notifications</h2>
           </div>
-          <button type="button" onClick={onClose} aria-label="Fermer" className="rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 transition">
+          <button type="button" onClick={onClose} aria-label="Fermer" className="bf-button-secondary">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -80,7 +80,7 @@ export function NotificationPreferencesModal({ userId, onClose }: Props) {
 
         {/* Footer */}
         <div className="flex justify-end gap-2 border-t border-slate-100 px-6 py-4">
-          <button type="button" onClick={onClose} className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+          <button type="button" onClick={onClose} className="bf-button-secondary">
             Annuler
           </button>
           <button

@@ -56,7 +56,7 @@ export function TimelogModal({ taskId, seconds = 0, onClose, onSuccess }: Timelo
       <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-2xl max-h-[90vh] bf-modal-panel overflow-y-auto space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">Enregistrer le temps</h2>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition">
+          <button onClick={onClose} className="bf-button-secondary">
             <X className="w-5 h-5" />
           </button>
         </div>

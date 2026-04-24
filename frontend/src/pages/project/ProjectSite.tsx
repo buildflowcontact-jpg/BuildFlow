@@ -87,7 +87,7 @@ function ModalWrapper({ title, onClose, children }: { title: string; onClose: ()
       <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] bf-modal-panel overflow-y-auto">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-slate-900">{title}</h3>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 transition"><X className="h-4 w-4" /></button>
+          <button onClick={onClose} className="bf-button-secondary"><X className="h-4 w-4" /></button>
         </div>
         {children}
       </div>

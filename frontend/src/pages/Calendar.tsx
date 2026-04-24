@@ -97,7 +97,7 @@ function AddEventModal({
       <div className="w-full max-w-2xl max-h-[90vh] bf-modal-panel overflow-y-auto rounded-3xl bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
           <h2 className="text-lg font-semibold text-slate-900">Ajouter un événement</h2>
-          <button onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100">
+          <button onClick={onClose} className="bf-button-secondary" title="Fermer la fenêtre calendrier" aria-label="Fermer la fenêtre calendrier">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -153,7 +153,7 @@ function AddEventModal({
           </div>
         </div>
         <div className="flex gap-3 border-t border-slate-100 px-6 py-4">
-          <button onClick={onClose} className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+          <button onClick={onClose} className="bf-button-secondary">
             Annuler
           </button>
           <button
@@ -173,6 +173,8 @@ function AddEventModal({
               onClose()
             }}
             className="flex-1 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-40 transition"
+            title="Ajouter l'événement au calendrier"
+            aria-label="Ajouter l'événement au calendrier"
           >
             Ajouter
           </button>
@@ -313,7 +315,7 @@ export default function Calendar() {
         <div className="rounded-3xl bg-white shadow-lg overflow-hidden">
           {/* Navigation mois */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-            <button onClick={prevMonth} className="rounded-xl p-2 text-slate-500 hover:bg-slate-100 transition">
+            <button onClick={prevMonth} className="bf-button-secondary">
               <ChevronLeft className="h-5 w-5" />
             </button>
             <div className="flex items-center gap-3">
@@ -327,7 +329,7 @@ export default function Calendar() {
                 Aujourd'hui
               </button>
             </div>
-            <button onClick={nextMonth} className="rounded-xl p-2 text-slate-500 hover:bg-slate-100 transition">
+            <button onClick={nextMonth} className="bf-button-secondary">
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
@@ -525,7 +527,7 @@ export default function Calendar() {
           <div className="w-full max-w-2xl max-h-[90vh] bf-modal-panel overflow-y-auto rounded-3xl bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
               <h2 className="text-base font-semibold text-slate-900 truncate pr-4">{selectedEvent.title}</h2>
-              <button onClick={() => setSelectedEvent(null)} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100">
+              <button onClick={() => setSelectedEvent(null)} className="bf-button-secondary">
                 <X className="h-5 w-5" />
               </button>
             </div>

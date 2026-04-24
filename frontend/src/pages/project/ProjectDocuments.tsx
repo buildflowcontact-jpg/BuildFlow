@@ -66,7 +66,7 @@ function VersionsModal({ docId, docName, onClose }: { docId: string; docName: st
             <h2 className="text-lg font-semibold text-slate-900">Historique des versions</h2>
             <p className="text-xs text-slate-500 mt-0.5 truncate max-w-xs">{docName}</p>
           </div>
-          <button onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:bg-slate-100"><X className="h-4 w-4" /></button>
+          <button onClick={onClose} className="bf-button-secondary"><X className="h-4 w-4" /></button>
         </div>
         {loading ? (
           <div className="space-y-2">
@@ -154,8 +154,8 @@ function UploadModal({
           </div>
           {error && <p className="rounded-xl bg-red-50 px-3 py-2 text-xs text-red-600">{error}</p>}
           <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">Annuler</button>
-            <button type="submit" disabled={uploading || !file} className="flex-1 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50">
+            <button type="button" onClick={onClose} className="bf-button-secondary">Annuler</button>
+            <button type="submit" disabled={uploading || !file} className="bf-button">
               {uploading ? 'Upload...' : 'Importer'}
             </button>
           </div>

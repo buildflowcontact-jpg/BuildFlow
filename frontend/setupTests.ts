@@ -1,3 +1,5 @@
+// Mock global Supabase pour tous les tests (fallback)
+jest.mock('./src/lib/supabase', () => require('./src/__mocks__/supabase'));
 import '@testing-library/jest-dom';
 import { toHaveNoViolations } from 'jest-axe';
 

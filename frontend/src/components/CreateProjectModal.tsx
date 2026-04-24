@@ -370,6 +370,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
             <button
               onClick={handleClose}
               className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
+              title="Fermer la fenêtre de création de projet"
+              aria-label="Fermer la fenêtre de création de projet"
             >
               <X className="h-5 w-5" />
             </button>
@@ -409,6 +411,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
               <button
                 onClick={() => choosePattern(null)}
                 className="w-full flex items-center gap-3 rounded-2xl border-2 border-dashed border-slate-200 px-4 py-3 text-left hover:border-indigo-300 hover:bg-indigo-50/30 transition"
+                title="Créer un projet vierge (sans modèle)"
+                aria-label="Créer un projet vierge (sans modèle)"
               >
                 <LayoutTemplate className="h-5 w-5 text-slate-400 flex-shrink-0" />
                 <div>
@@ -436,6 +440,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                       type="button"
                       onClick={() => choosePattern(pattern)}
                       className="flex items-center gap-3 min-w-0 flex-1 text-left"
+                      title={`Créer un projet à partir du modèle : ${pattern.name}`}
+                      aria-label={`Créer un projet à partir du modèle : ${pattern.name}`}
                     >
                       <LayoutTemplate className="h-5 w-5 text-indigo-500 flex-shrink-0" />
                       <div className="flex-1 min-w-0">

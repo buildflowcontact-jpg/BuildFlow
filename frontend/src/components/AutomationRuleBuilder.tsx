@@ -62,6 +62,8 @@ export default function AutomationRuleBuilder({ projectId }: { projectId: string
         <button
           onClick={() => setShowForm(!showForm)}
           className="p-1 bg-yellow-100 text-yellow-600 rounded hover:bg-yellow-200"
+          title={showForm ? "Fermer le formulaire d'ajout de règle" : "Ajouter une nouvelle règle d'automatisation"}
+          aria-label={showForm ? "Fermer le formulaire d'ajout de règle" : "Ajouter une nouvelle règle d'automatisation"}
         >
           <Plus size={16} />
         </button>
@@ -136,6 +138,7 @@ export default function AutomationRuleBuilder({ projectId }: { projectId: string
                     : 'text-red-400 hover:text-red-600 hover:bg-red-50'
                 }`}
                 title={deleteConfirmRuleId === rule.id ? 'Confirmer la suppression' : 'Supprimer'}
+                aria-label={deleteConfirmRuleId === rule.id ? 'Confirmer la suppression' : 'Supprimer'}
               >
                 {deleteConfirmRuleId === rule.id ? <Check size={14} /> : <Trash2 size={14} />}
               </button>

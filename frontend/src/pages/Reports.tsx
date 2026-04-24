@@ -1,7 +1,8 @@
-﻿import { useEffect, useMemo, useState } from 'react'
-import { supabase } from '../lib/supabase'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { exportProjectsToPDFReport } from '../lib/export'
+﻿import { useEffect, useMemo, useState, Suspense, lazy } from 'react';
+import { supabase } from '../lib/supabase';
+import { exportProjectsToPDFReport } from '../lib/export';
+
+const LazyReportsChartFull = lazy(() => import('./ReportsChartFull'));
 
 type ReportTask = { id: string; status: string; priority: string; dueDate?: string | null; completedAt?: string | null; createdAt?: string | null }
 type ReportProject = { id: string; name: string; status: string; budget?: number | null; tasks: ReportTask[] }
@@ -233,15 +234,9 @@ export default function Reports() {
             {weeklyCompletionData.some((w) => w.count > 0) && (
               <div className="rounded-2xl border border-slate-200 p-6">
                 <p className="text-sm uppercase tracking-[0.2em] text-slate-500 mb-4">Tâches terminées par semaine</p>
-                <ResponsiveContainer width="100%" height={160}>
-                  <BarChart data={weeklyCompletionData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis dataKey="label" tick={{ fontSize: 10 }} />
-                    <YAxis tick={{ fontSize: 10 }} allowDecimals={false} />
-                    <Tooltip formatter={(v) => [v, 'Tâches terminées']} />
-                    <Bar dataKey="count" fill="#0f172a" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                <Suspense fallback={<div>Chargement du graphique…</div>}>
+                  <LazyReportsChartFull weeklyCompletionData={weeklyCompletionData} />
+                </Suspense>
               </div>
             )}
           </div>

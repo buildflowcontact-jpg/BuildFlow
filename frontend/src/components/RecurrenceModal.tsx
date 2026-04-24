@@ -109,7 +109,7 @@ export function RecurrenceModal({ taskId, onClose, onSuccess }: RecurrenceModalP
           <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
             <Calendar className="w-5 h-5" /> Récurrence
           </h2>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded transition">
+          <button onClick={onClose} className="bf-button-secondary">
             <X className="w-5 h-5" />
           </button>
         </div>
