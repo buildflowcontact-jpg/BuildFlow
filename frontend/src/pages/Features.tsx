@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import BaselineComparison from '../components/BaselineComparison'
 import TeamCapacityBoard from '../components/TeamCapacityBoard'
 import RiskRegisterModal from '../components/RiskRegisterModal'

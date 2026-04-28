@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { getGlobalActivityLogs, type ActivityLogFormatted } from '../lib/auditLog'
 import { FilePlus, Pencil, Trash2, Clock, Filter, RefreshCw } from 'lucide-react'

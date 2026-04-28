@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo } from 'react'
+﻿import React, { useState, useEffect, useMemo } from 'react'
 import { ChevronLeft, ChevronRight, User, X, Plus, Eye } from 'lucide-react'
 import {
   TeamMember,

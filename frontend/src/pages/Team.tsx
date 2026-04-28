@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { Building2, Briefcase, Mail, Plus, Star, Trash2, User, X } from 'lucide-react'
 import { type VirtualMember, getDisplayName, getInitials, getSubtitle, pickColor } from '../utils/teamStore'
 import { createFavoriteMember, deleteVirtualMemberDb, loadFavoriteMembers, upsertUserProfile } from '../lib/db'

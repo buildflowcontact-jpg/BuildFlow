@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef, useMemo } from 'react'
+﻿import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useToast } from '../components/ToastContext'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { Plus, ChevronRight, ChevronDown, X, Check, Trash2, Flag, User, Lock, Link2, Network, Pencil, List } from 'lucide-react'

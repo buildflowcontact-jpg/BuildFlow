@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react'
+﻿import React, { useState, useEffect, useRef } from 'react'
 import { Plus, Trash2, X, Pencil, Check, ChevronRight, ChevronDown, GitBranch } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { DateInput } from '../components/DateInput'

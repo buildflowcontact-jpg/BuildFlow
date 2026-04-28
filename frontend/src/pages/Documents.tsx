@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react'
+﻿import React, { useState, useEffect, useRef } from 'react'
 import { Plus, Trash2, X, Check, Search, FileText, Sheet, File } from 'lucide-react'
 import { loadDocumentsDb, uploadDocumentDb, deleteDocumentDb, type DbDocument } from '../lib/db'
 import { supabase } from '../lib/supabase'

@@ -20,8 +20,8 @@ test('parcours creation projet et tache', async ({ page }, testInfo) => {
   await page.goto('/');
 
   // Remplir le formulaire de connexion
-  await page.getByLabel('Adresse email').fill(E2E_EMAIL!);
-  await page.getByLabel('Mot de passe').fill(E2E_PASSWORD!);
+  await page.getByLabel('Adresse email').fill(E2E_EMAIL);
+  await page.getByLabel('Mot de passe').fill(E2E_PASSWORD);
 
   // Soumettre le formulaire
   await page.getByRole('button', { name: /se connecter/i }).click();

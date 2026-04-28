@@ -1,6 +1,9 @@
 
-import { supabase as supabaseMock } from '../__mocks__/supabase';
-jest.mock('../lib/supabase', () => ({ supabase: supabaseMock }));
+import React from 'react';
+jest.mock('../lib/supabase', () => {
+  const { supabase } = require('../__mocks__/supabase');
+  return { supabase };
+});
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import AppShell from '../components/AppShell';

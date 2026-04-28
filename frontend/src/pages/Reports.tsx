@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState, Suspense, lazy } from 'react';
+﻿import React, { useEffect, useMemo, useState, Suspense, lazy } from 'react';
 import { supabase } from '../lib/supabase';
 import { exportProjectsToPDFReport } from '../lib/export';
 
