@@ -13,7 +13,7 @@ jobs:
       run:
         working-directory: scripts/sql
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Valider les scripts SQL de migration
         shell: pwsh
         run: ./validate-migration-scripts.ps1 -SqlRoot ../../docs
@@ -24,7 +24,7 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
@@ -82,7 +82,7 @@ jobs:
       run:
         working-directory: scripts/sql
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: DB_CONNECTION_STRING absent - test ignoré
         if: env.HAS_DB_CONNECTION_STRING != 'true'
         run: echo "::notice::DB_CONNECTION_STRING n'est pas configuré. Le test backup/restore est ignoré."
